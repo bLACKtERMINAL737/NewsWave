@@ -108,6 +108,14 @@
             width: 100%;
         }
 
+        .nav-links a.active {
+            color: var(--accent);
+        }
+
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
         /* Hero Section */
         .hero {
             margin-top: 80px;
@@ -844,17 +852,289 @@
     </footer>
 
     <script>
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+        // News Data
+        const newsData = {
+            home: {
+                featured: {
+                    category: 'Breaking News',
+                    title: 'Global Climate Summit Reaches Historic Agreement on Carbon Emissions',
+                    author: 'Sarah Mitchell',
+                    time: '2 hours ago',
+                    readTime: '8 min read',
+                    gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+                },
+                sideCards: [
+                    {
+                        title: 'Tech Giants Announce Major AI Partnership for Safety Standards',
+                        time: '5 hours ago',
+                        category: 'Technology',
+                        gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
+                    },
+                    {
+                        title: 'Revolutionary Battery Technology Promises 1000-Mile Electric Vehicles',
+                        time: '7 hours ago',
+                        category: 'Science',
+                        gradient: 'linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)'
+                    }
+                ],
+                articles: [
+                    { category: 'World', title: 'UN Security Council Convenes Emergency Session on Regional Tensions', excerpt: 'International diplomats gather to address escalating concerns and seek peaceful resolution...', author: 'James Chen', readTime: '5 min read', gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
+                    { category: 'Business', title: 'Stock Markets Rally as Economic Indicators Show Strong Growth', excerpt: 'Major indices reach new heights amid positive employment data and consumer confidence...', author: 'Emily Rodriguez', readTime: '4 min read', gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)' },
+                    { category: 'Technology', title: 'New Quantum Computing Breakthrough Accelerates Drug Discovery', excerpt: 'Researchers achieve quantum advantage in molecular simulation, opening doors to faster medicine development...', author: 'Dr. Amira Patel', readTime: '6 min read', gradient: 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)' },
+                    { category: 'Sports', title: 'Championship Final Delivers Thrilling Last-Minute Victory', excerpt: 'Underdog team clinches title in dramatic finish that will be remembered for generations...', author: 'Marcus Johnson', readTime: '3 min read', gradient: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)' },
+                    { category: 'Culture', title: 'Historic Museum Opens Doors to Rare Ancient Artifacts Exhibition', excerpt: 'Never-before-seen treasures from archaeological discoveries now available for public viewing...', author: 'Sofia Antonova', readTime: '7 min read', gradient: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)' },
+                    { category: 'Health', title: 'Medical Breakthrough Offers Hope for Alzheimer\'s Patients', excerpt: 'Clinical trials demonstrate promising results in slowing cognitive decline through innovative treatment...', author: 'Dr. Rachel Kim', readTime: '8 min read', gradient: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)' }
+                ]
+            },
+            world: {
+                featured: {
+                    category: 'World News',
+                    title: 'Historic Peace Accord Signed Between Long-Standing Rival Nations',
+                    author: 'James Chen',
+                    time: '1 hour ago',
+                    readTime: '10 min read',
+                    gradient: 'linear-gradient(135deg, #0093E9 0%, #80D0C7 100%)'
+                },
+                sideCards: [
+                    {
+                        title: 'European Union Announces Comprehensive Migration Reform Package',
+                        time: '3 hours ago',
+                        category: 'Europe',
+                        gradient: 'linear-gradient(135deg, #8EC5FC 0%, #E0C3FC 100%)'
+                    },
+                    {
+                        title: 'Asian Economic Summit Focuses on Regional Trade Integration',
+                        time: '5 hours ago',
+                        category: 'Asia',
+                        gradient: 'linear-gradient(135deg, #D299C2 0%, #FEF9D7 100%)'
+                    }
+                ],
+                articles: [
+                    { category: 'Politics', title: 'UN General Assembly Addresses Climate Crisis with Renewed Urgency', excerpt: 'World leaders commit to accelerated action on environmental protection and sustainability goals...', author: 'Maria Santos', readTime: '7 min read', gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
+                    { category: 'Conflict', title: 'Humanitarian Crisis Deepens in Conflict-Affected Regions', excerpt: 'International aid organizations mobilize resources to assist displaced populations...', author: 'Ahmed Hassan', readTime: '6 min read', gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
+                    { category: 'Diplomacy', title: 'Trade Negotiations Reach Critical Phase Between Major Economies', excerpt: 'Diplomats work around the clock to finalize historic trade agreement affecting billions...', author: 'Li Wei', readTime: '5 min read', gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
+                    { category: 'Environment', title: 'Amazon Rainforest Protection Initiative Gains International Support', excerpt: 'Coalition of nations pledges billions for conservation and indigenous rights protection...', author: 'Carlos Rivera', readTime: '8 min read', gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)' },
+                    { category: 'Society', title: 'Global Education Summit Addresses Digital Divide in Learning', excerpt: 'Ministers of education collaborate on strategies to ensure universal access to quality education...', author: 'Priya Sharma', readTime: '6 min read', gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)' },
+                    { category: 'Security', title: 'Cybersecurity Alliance Formed to Combat International Threats', excerpt: 'Nations unite to establish comprehensive framework for digital security cooperation...', author: 'David Kim', readTime: '7 min read', gradient: 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)' }
+                ]
+            },
+            business: {
+                featured: {
+                    category: 'Business',
+                    title: 'Tech Unicorn Goes Public in Largest IPO of the Decade',
+                    author: 'Emily Rodriguez',
+                    time: '30 minutes ago',
+                    readTime: '7 min read',
+                    gradient: 'linear-gradient(135deg, #FA8BFF 0%, #2BD2FF 90%, #2BFF88 100%)'
+                },
+                sideCards: [
+                    {
+                        title: 'Central Banks Coordinate Global Interest Rate Strategy',
+                        time: '2 hours ago',
+                        category: 'Finance',
+                        gradient: 'linear-gradient(135deg, #FBDA61 0%, #FF5ACD 100%)'
+                    },
+                    {
+                        title: 'Renewable Energy Sector Attracts Record Investment',
+                        time: '4 hours ago',
+                        category: 'Energy',
+                        gradient: 'linear-gradient(135deg, #89F7FE 0%, #66A6FF 100%)'
+                    }
+                ],
+                articles: [
+                    { category: 'Markets', title: 'Stock Markets Hit All-Time Highs on Strong Corporate Earnings', excerpt: 'Major indices surge as technology and healthcare sectors lead gains across global markets...', author: 'Michael Chen', readTime: '5 min read', gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
+                    { category: 'Startups', title: 'AI Startup Raises $500M in Series C Funding Round', excerpt: 'Venture capital firms bet big on artificial intelligence innovation and enterprise solutions...', author: 'Jessica Park', readTime: '4 min read', gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
+                    { category: 'Economy', title: 'GDP Growth Exceeds Expectations Across Major Economies', excerpt: 'Economic indicators point to sustained recovery and expansion in post-pandemic era...', author: 'Robert Taylor', readTime: '6 min read', gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
+                    { category: 'Retail', title: 'E-Commerce Giants Report Record Holiday Season Sales', excerpt: 'Online retail continues to dominate as consumer spending shifts increasingly digital...', author: 'Amanda Lee', readTime: '5 min read', gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)' },
+                    { category: 'Real Estate', title: 'Commercial Property Market Shows Signs of Recovery', excerpt: 'Office space demand rebounds as hybrid work models stabilize and businesses expand...', author: 'Thomas Anderson', readTime: '7 min read', gradient: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)' },
+                    { category: 'Crypto', title: 'Digital Currency Regulations Bring Clarity to Crypto Markets', excerpt: 'Regulatory framework provides guidelines for cryptocurrency trading and institutional adoption...', author: 'Sophie Zhang', readTime: '6 min read', gradient: 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)' }
+                ]
+            },
+            technology: {
+                featured: {
+                    category: 'Technology',
+                    title: 'Revolutionary AI System Achieves Human-Level Reasoning',
+                    author: 'Dr. Amira Patel',
+                    time: '1 hour ago',
+                    readTime: '9 min read',
+                    gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+                },
+                sideCards: [
+                    {
+                        title: 'Breakthrough in Fusion Energy Brings Clean Power Closer',
+                        time: '3 hours ago',
+                        category: 'Energy',
+                        gradient: 'linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%)'
+                    },
+                    {
+                        title: '6G Network Testing Begins in Major Cities Worldwide',
+                        time: '5 hours ago',
+                        category: 'Telecom',
+                        gradient: 'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)'
+                    }
+                ],
+                articles: [
+                    { category: 'AI', title: 'Machine Learning Algorithm Predicts Diseases Years Before Symptoms', excerpt: 'Medical AI demonstrates unprecedented accuracy in early detection of serious health conditions...', author: 'Dr. Sarah Johnson', readTime: '8 min read', gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
+                    { category: 'Space', title: 'Private Space Company Successfully Launches Reusable Rocket', excerpt: 'Milestone achievement reduces cost of space access and accelerates commercial space industry...', author: 'Alex Turner', readTime: '6 min read', gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
+                    { category: 'Robotics', title: 'Humanoid Robots Enter Workforce in Manufacturing Plants', excerpt: 'Advanced robotics technology collaborates safely alongside human workers in production lines...', author: 'Jennifer Wu', readTime: '5 min read', gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
+                    { category: 'Security', title: 'New Encryption Standard Promises Quantum-Resistant Protection', excerpt: 'Cryptographers develop next-generation security protocols for post-quantum computing era...', author: 'Marcus Brown', readTime: '7 min read', gradient: 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)' },
+                    { category: 'Gaming', title: 'Virtual Reality Platform Reaches 100 Million Active Users', excerpt: 'Immersive gaming experiences drive mainstream adoption of VR technology worldwide...', author: 'Kevin Liu', readTime: '4 min read', gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)' },
+                    { category: 'Biotech', title: 'CRISPR Gene Therapy Approved for Widespread Clinical Use', excerpt: 'Revolutionary genetic treatment offers hope for previously incurable hereditary diseases...', author: 'Dr. Rachel Green', readTime: '9 min read', gradient: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)' }
+                ]
+            },
+            sports: {
+                featured: {
+                    category: 'Sports',
+                    title: 'Underdog Team Wins Championship in Historic Upset Victory',
+                    author: 'Marcus Johnson',
+                    time: '45 minutes ago',
+                    readTime: '6 min read',
+                    gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
+                },
+                sideCards: [
+                    {
+                        title: 'Olympic Gold Medalist Announces Comeback for Next Games',
+                        time: '2 hours ago',
+                        category: 'Olympics',
+                        gradient: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)'
+                    },
+                    {
+                        title: 'Record-Breaking Performance Shatters Decades-Old World Record',
+                        time: '4 hours ago',
+                        category: 'Athletics',
+                        gradient: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)'
+                    }
+                ],
+                articles: [
+                    { category: 'Football', title: 'Premier League Title Race Goes Down to Final Match Day', excerpt: 'Three teams remain in contention for championship as season reaches dramatic conclusion...', author: 'Tom Williams', readTime: '5 min read', gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
+                    { category: 'Basketball', title: 'Rising Star Signs Historic $200M Contract Extension', excerpt: 'Young phenom secures future with franchise in largest deal in league history...', author: 'Chris Jackson', readTime: '4 min read', gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
+                    { category: 'Tennis', title: 'Grand Slam Tournament Delivers Thrilling Five-Set Epic Final', excerpt: 'Tennis fans witness one of the greatest matches ever played in championship showdown...', author: 'Maria Gonzalez', readTime: '6 min read', gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
+                    { category: 'Racing', title: 'Formula 1 Driver Clinches Championship with Race to Spare', excerpt: 'Dominant season performance secures world title with multiple races still remaining...', author: 'Pierre Dubois', readTime: '5 min read', gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)' },
+                    { category: 'Cricket', title: 'International Cricket Series Goes to Decisive Fifth Match', excerpt: 'Evenly matched teams battle for series victory in winner-takes-all finale...', author: 'Rajesh Kumar', readTime: '7 min read', gradient: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)' },
+                    { category: 'Golf', title: 'Major Championship Won by Amateur in Stunning Upset', excerpt: 'Unprecedented victory as non-professional golfer defeats field of seasoned champions...', author: 'Scott Miller', readTime: '6 min read', gradient: 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)' }
+                ]
+            },
+            culture: {
+                featured: {
+                    category: 'Culture',
+                    title: 'Groundbreaking Film Wins Unprecedented Eight Academy Awards',
+                    author: 'Sofia Antonova',
+                    time: '3 hours ago',
+                    readTime: '7 min read',
+                    gradient: 'linear-gradient(135deg, #FA8BFF 0%, #2BD2FF 90%, #2BFF88 100%)'
+                },
+                sideCards: [
+                    {
+                        title: 'Renaissance Masterpiece Discovered in Private Collection',
+                        time: '5 hours ago',
+                        category: 'Art',
+                        gradient: 'linear-gradient(135deg, #FBDA61 0%, #FF5ACD 100%)'
+                    },
+                    {
+                        title: 'Music Festival Announces Star-Studded Lineup for Summer',
+                        time: '6 hours ago',
+                        category: 'Music',
+                        gradient: 'linear-gradient(135deg, #89F7FE 0%, #66A6FF 100%)'
+                    }
+                ],
+                articles: [
+                    { category: 'Film', title: 'Independent Film Festival Showcases Diverse International Cinema', excerpt: 'Celebrated event highlights emerging filmmakers and groundbreaking storytelling from around the world...', author: 'Elena Rossi', readTime: '6 min read', gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
+                    { category: 'Theater', title: 'Broadway Musical Revival Receives Standing Ovations', excerpt: 'Classic production reimagined for modern audiences captures hearts with stunning performances...', author: 'Jonathan Smith', readTime: '5 min read', gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
+                    { category: 'Literature', title: 'Debut Novel Wins Major Literary Prize and Critical Acclaim', excerpt: 'First-time author captures imagination of readers and critics with powerful storytelling...', author: 'Catherine Moore', readTime: '7 min read', gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
+                    { category: 'Fashion', title: 'Fashion Week Unveils Bold New Trends for Upcoming Season', excerpt: 'Designers push boundaries with innovative collections celebrating creativity and sustainability...', author: 'Isabelle Dubois', readTime: '5 min read', gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)' },
+                    { category: 'Music', title: 'Legendary Artist Announces Farewell World Tour', excerpt: 'Icon of music industry plans final concert series spanning five continents over two years...', author: 'James Rodriguez', readTime: '6 min read', gradient: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)' },
+                    { category: 'Heritage', title: 'Ancient City Named UNESCO World Heritage Site', excerpt: 'Recognition preserves cultural significance and promotes conservation of historical treasures...', author: 'Hassan Al-Rashid', readTime: '8 min read', gradient: 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)' }
+                ]
+            }
+        };
+
+        // Current page state
+        let currentPage = 'home';
+
+        // Function to render content
+        function renderContent(page) {
+            currentPage = page;
+            const data = newsData[page];
+            
+            // Update featured card
+            const featuredCard = document.querySelector('.featured-card');
+            const featuredImage = featuredCard.querySelector('.featured-image');
+            const categoryBadge = featuredCard.querySelector('.category-badge');
+            const featuredTitle = featuredCard.querySelector('.featured-title');
+            const featuredMeta = featuredCard.querySelector('.featured-meta');
+            
+            featuredImage.style.background = data.featured.gradient;
+            categoryBadge.textContent = data.featured.category;
+            featuredTitle.textContent = data.featured.title;
+            featuredMeta.innerHTML = `
+                <span>🕒 ${data.featured.time}</span>
+                <span>✍️ ${data.featured.author}</span>
+                <span>📖 ${data.featured.readTime}</span>
+            `;
+            
+            // Update side cards
+            const miniCards = document.querySelectorAll('.mini-card');
+            data.sideCards.forEach((card, index) => {
+                if (miniCards[index]) {
+                    const miniImage = miniCards[index].querySelector('.mini-card-image');
+                    const miniTitle = miniCards[index].querySelector('.mini-card-title');
+                    const miniMeta = miniCards[index].querySelector('.mini-meta');
+                    
+                    miniImage.style.background = card.gradient;
+                    miniTitle.textContent = card.title;
+                    miniMeta.textContent = `${card.time} • ${card.category}`;
                 }
+            });
+            
+            // Update news grid
+            const newsGrid = document.querySelector('.news-grid');
+            newsGrid.innerHTML = '';
+            
+            data.articles.forEach((article, index) => {
+                const card = document.createElement('div');
+                card.className = 'news-card';
+                card.style.animationDelay = `${0.7 + index * 0.1}s`;
+                card.innerHTML = `
+                    <div class="news-image" style="background: ${article.gradient}"></div>
+                    <div class="news-content">
+                        <div class="news-category">${article.category}</div>
+                        <h3 class="news-title">${article.title}</h3>
+                        <p class="news-excerpt">${article.excerpt}</p>
+                        <div class="news-footer">
+                            <span class="author">By ${article.author}</span>
+                            <span class="read-time">${article.readTime}</span>
+                        </div>
+                    </div>
+                `;
+                newsGrid.appendChild(card);
+            });
+            
+            // Update section title
+            const sectionTitle = document.querySelector('.section-title');
+            if (page === 'home') {
+                sectionTitle.textContent = 'Latest Stories';
+            } else {
+                sectionTitle.textContent = page.charAt(0).toUpperCase() + page.slice(1) + ' News';
+            }
+            
+            // Update active nav link
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${page}`) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Navigation click handlers
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const page = this.getAttribute('href').substring(1);
+                renderContent(page);
             });
         });
 
@@ -889,9 +1169,24 @@
             });
         }, observerOptions);
 
-        // Observe all cards
-        document.querySelectorAll('.news-card, .mini-card, .featured-card').forEach(card => {
-            observer.observe(card);
+        // Initial observation setup
+        function observeCards() {
+            document.querySelectorAll('.news-card, .mini-card, .featured-card').forEach(card => {
+                observer.observe(card);
+            });
+        }
+
+        observeCards();
+
+        // Add click animations for cards
+        document.addEventListener('click', function(e) {
+            const card = e.target.closest('.news-card, .mini-card, .featured-card, .trending-item');
+            if (card) {
+                card.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    card.style.transform = '';
+                }, 150);
+            }
         });
     </script>
 </body>
